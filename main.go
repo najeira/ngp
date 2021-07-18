@@ -16,6 +16,15 @@ func main() {
 	password := flag.Arg(0)
 	domain := flag.Arg(1)
 
+	if cfg := loadConfig(); cfg != nil {
+		if cfg.Length > 0 && !isFlagPassed("n") {
+			length = cfg.Length
+		}
+		if cfg.Hash != "" && !isFlagPassed("h") {
+			hash = cfg.Hash
+		}
+	}
+
 	g := &Generator{
 		Hash:     hash,
 		Password: password,
@@ -31,4 +40,14 @@ func main() {
 
 	p := g.Generate()
 	fmt.Println(p)
+}
+
+func isFlagPassed(name string) bool {
+	found := false
+	flag.Visit(func(f *flag.Flag) {
+		if f.Name == name {
+			found = true
+		}
+	})
+	return found
 }
