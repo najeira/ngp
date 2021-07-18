@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 )
 
 func main() {
@@ -21,6 +22,13 @@ func main() {
 		Domain:   domain,
 		Length:   length,
 	}
+
+	if max := g.MaxLength(); length > max {
+		fmt.Printf("%s length should less %d\n", hash, max)
+		os.Exit(1)
+		return
+	}
+
 	p := g.Generate()
 	fmt.Println(p)
 }

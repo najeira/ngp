@@ -41,6 +41,13 @@ func (g *Generator) Generate() string {
 	return generated
 }
 
+func (g *Generator) MaxLength() int {
+	ch := g.getHash()
+	size := ch.Size()
+	length := base64.StdEncoding.EncodedLen(size)
+	return length
+}
+
 func roundPassword(ch crypto.Hash, input string, length int, round int) string {
 	generated := input
 	for {
