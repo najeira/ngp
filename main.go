@@ -1,9 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"os"
+	"strings"
+
+	"github.com/atotto/clipboard"
+	"golang.org/x/term"
 )
 
 func main() {
@@ -13,8 +18,8 @@ func main() {
 	flag.StringVar(&hash, "h", "sha512", "hash algorithm")
 	flag.Parse()
 
-	password := flag.Arg(0)
-	domain := flag.Arg(1)
+	//password := flag.Arg(0)
+	//domain := flag.Arg(1)
 
 	if cfg := loadConfig(); cfg != nil {
 		if cfg.Length > 0 && !isFlagPassed("n") {
@@ -24,6 +29,9 @@ func main() {
 			hash = cfg.Hash
 		}
 	}
+
+	password := promptPassword()
+	domain := promptDomain()
 
 	g := &Generator{
 		Hash:     hash,
@@ -39,7 +47,9 @@ func main() {
 	}
 
 	p := g.Generate()
-	fmt.Println(p)
+	//fmt.Println(p)
+	_ = clipboard.WriteAll(p)
+	fmt.Println("The password was copied to the clipboard")
 }
 
 func isFlagPassed(name string) bool {
@@ -50,4 +60,23 @@ func isFlagPassed(name string) bool {
 		}
 	})
 	return found
+}
+
+func promptPassword() string {
+	fmt.Print("Master passphrase: ")
+	defer fmt.Print("\n")
+
+	fd := os.Stdin.Fd()
+	b, _ := term.ReadPassword(int(fd))
+	return string(b)
+}
+
+func promptDomain() string {
+	fmt.Print("Domain: ")
+	defer fmt.Print("\n")
+
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	s := scanner.Text()
+	return strings.TrimRight(s, "\r\n")
 }
