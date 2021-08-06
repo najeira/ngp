@@ -32,11 +32,12 @@ You can check it from the code.
 ## Usage
 
 ```shell
-% ngp your_passphrase example.com
+% ngp
 ```
 
-The first argument is a passphrase
-and second argument is a site (domain) name.
+This tool will prompt you
+for your passphrase and site (domain) name,
+so enter them.
 
 ### hash algorithm
 
@@ -44,7 +45,7 @@ You can use `-h` to set hash algorithm.
 Default is `sha512`.
 
 ```shell
-% ngp -h=md5 your_passphrase example.com
+% ngp -h md5
 ```
 
 When `md5`, the result password is the same as
@@ -56,7 +57,7 @@ You can use `-n` to set password length.
 Default is `20`.
 
 ```shell
-% ngp -n=10 your_passphrase example.com
+% ngp -n 10
 ```
 
 ## License
